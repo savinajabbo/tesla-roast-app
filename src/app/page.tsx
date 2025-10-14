@@ -30,16 +30,7 @@ export default function Home() {
         </div>
 
         <div style={{ display: "flex", height:"10vh", alignItems: "center", justifyContent: "center" }}>
-          <button onClick={handleTeslaLogin}
-          className="
-            bg-[#E31937] hover:bg-[#FF4500]
-            text-white font-bold py-4 px-8
-            rounded-2xl text-lg
-            shadow-md hover:shadow-xl
-            border-2 border-transparent hover:border-white
-            transition-colors duration-300
-            "
-          >
+          <button onClick={handleTeslaLogin} className="tesla-button">
             sign in with tesla
           </button>
         </div>

@@ -17,6 +17,26 @@ body {
   margin: 0;
   display: grid;
   place-items: center;
-  
+
 }
 
+.tesla-button {
+  background-color: #E31937;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.1s;
+}
+
+.tesla-button:hover {
+  background-color: #720d1c;
+  box-shadow: 0 6px 14px fgba(255, 69, 0, 0.4);
+}
+
+.tesla-button:active {
+  transform: scale(0.98);
+}
