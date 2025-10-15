@@ -8,10 +8,11 @@ export default function Home() {
 
   const handleTeslaLogin = () => {
     const clientId = "ownerapi";
-    const redirectUri = "http://localhost:3000/api/auth/login";
+    const redirectUri = "https://tesla-roast-app.vercel.app/api/auth/callback";
 
     const url = `https://auth.tesla.com/oauth2/v3/authorize?client_id=${clientId}&response_type=code&scope=openid email offline_access&redirect_uri=${redirectUri}`;
 
+    console.log("redirecting to tesla login: ", url);
     window.location.href = url;
   }
 
@@ -23,9 +24,10 @@ export default function Home() {
             className="dark:invert"
             src="/dog.png"
             alt="logo"
-            width={180}
-            height={38}
-            priority
+            width={0}
+            height={0}
+            sizes="100vw"
+            style={{ width: "256px", height: "256px" }}
           />
         </div>
 
