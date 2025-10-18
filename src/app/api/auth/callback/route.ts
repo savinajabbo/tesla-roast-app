@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+console.log("TESLA_CLIENT_SECRET loaded?", !!process.env.TESLA_CLIENT_SECRET);
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
