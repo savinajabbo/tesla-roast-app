@@ -4,13 +4,12 @@ import Image from "next/image";
 import React, { useState } from "react";
 
 export default function Home() {
-  const [isHovered, setIsHovered] = useState(false);
 
   const handleTeslaLogin = () => {
     const clientId = "ownerapi";
     const redirectUri = "https://tesla-roast-app.vercel.app/api/auth/callback";
 
-    const url = `https://auth.tesla.com/oauth2/v3/authorize?client_id=${clientId}&response_type=code&scope=openid email offline_access&redirect_uri=${redirectUri}`;
+    const url = `https://auth.tesla.com/oauth2/v3/authorize?client_id=${clientId}&response_type=code&scope=openid email offline_access&redirect_uri=${encodeURIComponent(redirectUri)}`;
 
     console.log("redirecting to tesla login: ", url);
     window.location.href = url;
@@ -33,7 +32,7 @@ export default function Home() {
 
         <div style={{ display: "flex", height:"10vh", alignItems: "center", justifyContent: "center" }}>
           <button onClick={handleTeslaLogin} className="tesla-button">
-            sign in with tesla
+            login with tesla
           </button>
         </div>
       </main>
