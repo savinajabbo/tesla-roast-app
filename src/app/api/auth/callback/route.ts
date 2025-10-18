@@ -8,10 +8,10 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: "missing code from tesla" }, { status: 400 });
     }
 
-    const tokenURL = "https://auth.tesla.com/oauth2/v3/token";
+    const tokenURL = "https://fleet-api.prd.na.vn.cloud.tesla.com/oauth2/v3/token";
 
     const clientId = "0781fc62-6073-459e-84ca-ab343e1699fa";
-    const clientSecret = process.env.TESLA_CLIENT_SECRET;
+    const clientSecret = "ta-secret.c0dioVMRmx@ChDS5";
     const redirectUri = "https://tesla-roast-app.vercel.app/api/auth/callback";
 
     const body = {
