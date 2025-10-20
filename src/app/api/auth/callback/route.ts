@@ -55,5 +55,5 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: data.error, details: data}, { status: 400 });
     }
 
-    return NextResponse.redirect("https://tesla-roast-app.vercel.app/success");
+    return NextResponse.redirect("https://tesla-roast-app.vercel.app/dashboard");
 }
