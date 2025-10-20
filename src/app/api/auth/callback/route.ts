@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     const body = {
         grant_type: "authorization_code",
         client_id: clientId,
-        clientSecret: clientSecret,
+        client_secret: clientSecret,
         code,
         redirect_uri: redirectUri,
     };
