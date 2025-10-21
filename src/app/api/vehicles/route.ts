@@ -9,11 +9,16 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: "missing tesla access token" }, { status: 401});
     }
 
-    const teslaResponse = await fetch("https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles", {
-        headers: {
-            Authorization: `Bearer $(token)`,
-        },
-    });
+    console.log("using tesla access token: ", token);
+
+    const teslaResponse = await fetch(
+        "https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles", 
+        {
+            headers: {
+                Authorization: `Bearer $(token)`,
+            },
+        }
+    );
 
     const data = await teslaResponse.json()
     console.log("tesla vehicles: ", data);
