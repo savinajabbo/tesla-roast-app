@@ -8,8 +8,9 @@ export default function Home() {
   const handleTeslaLogin = () => {
     const clientId = "0781fc62-6073-459e-84ca-ab343e1699fa";
     const redirectUri = "https://tesla-roast-app.vercel.app/api/auth/callback";
+    const scope = "openid email offline_access vehicle_device_data";
 
-    const url = `https://auth.tesla.com/oauth2/v3/authorize?client_id=${clientId}&response_type=code&scope=openid%20email%20offline_access&redirect_uri=${encodeURIComponent(redirectUri)}`;
+    const url = `https://auth.tesla.com/oauth2/v3/authorize?client_id=${clientId}&response_type=code&scope=${encodeURIComponent(scope)}&redirect_uri=${redirectUri}`;
 
     console.log("redirecting to tesla login: ", url);
     window.location.href = url;

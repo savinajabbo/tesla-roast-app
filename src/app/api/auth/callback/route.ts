@@ -1,6 +1,4 @@
-import { responseCookiesToRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { NextResponse } from "next/server";
-console.log("TESLA_CLIENT_SECRET loaded?", !!process.env.TESLA_CLIENT_SECRET);
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -34,26 +32,21 @@ export async function GET(req: Request) {
         body: JSON.stringify(body),
     });
     
-    const text = await response.text();
 
-    if (text.trim().startsWith("<")) {
-        console.error("tesla returned HTML instead of JSON LOL: ", text.slice(0, 200));
-        return NextResponse.json({error: "tesla returned HTML instead of JSON"}, { status: 500 });
-    }
-
-    const firstChar = text.trim().charAt(0);
-    if (firstChar !== "{" && firstChar !== "[") {
-        console.error("invalid tesla response: ", text);
-        return NextResponse.json({ error: "invalid tesla response" }, {status: 500});
-    }
-
-    const data = JSON.parse(text);
+    const data = await response.json();
     console.log("tesla token exchange response: ", data);
 
     if (data.error) {
-        console.error("tesla error: ", data);
         return NextResponse.json({ error: data.error, details: data}, { status: 400 });
     }
 
-    return NextResponse.redirect("https://tesla-roast-app.vercel.app/dashboard");
+    const res = NextResponse.redirect("https://tesla-roast-app.vercel.app/dashboard");
+    res.cookies.set("tesla_access_token", data.access_token, {
+        httpOnly: true,
+        secure: true,
+        path: "/",
+        maxAge: 60 * 60,
+    });
+
+    return res;
 }
