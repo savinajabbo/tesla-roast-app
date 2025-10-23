@@ -12,6 +12,7 @@ export async function GET(req: Request) {
     const clientId = "0781fc62-6073-459e-84ca-ab343e1699fa";
     const clientSecret = process.env.TESLA_CLIENT_SECRET;
     const redirectUri = "https://tesla-roast-app.vercel.app/api/auth/callback";
+    const audience = "https://fleet-api.prd.na.vn.cloud.tesla.com";
 
     if (!clientSecret) {
         console.error("missing TESLA_CLIENT_SECRET in environment variables :(");
@@ -24,6 +25,7 @@ export async function GET(req: Request) {
         client_secret: clientSecret,
         code,
         redirect_uri: redirectUri,
+        audience,
     };
 
     const response = await fetch(tokenURL, {
