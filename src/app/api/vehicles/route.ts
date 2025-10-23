@@ -15,7 +15,7 @@ export async function GET(req: Request) {
         "https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles", 
         {
             headers: {
-                Authorization: `Bearer $(token)`,
+                Authorization: `Bearer ${token}`,
             },
         }
     );

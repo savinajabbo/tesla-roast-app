@@ -15,7 +15,7 @@ export default function Dashboard() {
     const [ vehicles, setVehicles ] = useState<TeslaVehicle[]>([]);
 
     useEffect(() => {
-        fetch("api/vehicles")
+        fetch("/api/vehicles")
             .then((res) => res.json())
             .then((data) => {
                 console.log("tesla data from server: ", data);
