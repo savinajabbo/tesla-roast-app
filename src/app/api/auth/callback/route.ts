@@ -8,18 +8,12 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: "missing code from tesla" }, { status: 400 });
     }
 
-    const tokenURL = "https://auth.tesla.com/oauth2/v3/token";
+    const tokenURL = "https://fleet-auth.prd.na.vn.cloud.tesla.com/oauth2/v3/token";
     const clientId = "0781fc62-6073-459e-84ca-ab343e1699fa";
     const clientSecret = process.env.TESLA_CLIENT_SECRET;
     const redirectUri = "https://tesla-roast-app.vercel.app/api/auth/callback";
     const audience = "https://fleet-api.prd.na.vn.cloud.tesla.com";
-
-    if (!clientSecret) {
-        console.error("missing TESLA_CLIENT_SECRET in environment variables :(");
-        return NextResponse.json({ error: "missing tesla client secret on server" }, { status: 500 });
-    }
-
-    const scope = "openid user_data offline_access vehicle_device_data vehicle_cmds vehicle_charging_cmds vehicle_location";
+    const scope = "openid offline_access user_data vehicle_device_data vehicle_cmds vehicle_charging_cmds";
 
     const body = {
         grant_type: "authorization_code",

@@ -11,7 +11,7 @@ export default function Home() {
     const audience = "https://fleet-api.prd.na.vn.cloud.tesla.com";
     const scope = "openid email offline_access vehicle_device_data vehicle_cmds vehicle_charging_cmds";
 
-    const url = `https://auth.tesla.com/oauth2/v3/authorize?client_id=${clientId}&response_type=code&scope=${encodeURIComponent(scope)}&redirect_uri=${redirectUri}&audience=${encodeURIComponent(audience)}`;
+    const url = `https://fleet-auth.prd.na.vn.cloud.tesla.com/oauth2/v3/authorize?client_id=${clientId}&response_type=code&scope=${encodeURIComponent(scope)}&redirect_uri=${redirectUri}&audience=${encodeURIComponent(audience)}`;
 
     console.log("redirecting to tesla login: ", url);
     window.location.href = url;
