@@ -19,7 +19,7 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: "missing tesla client secret on server" }, { status: 500 });
     }
 
-    const scope = "openid email offline_access vehicle_device_data vehicle_cmds vehicle_charging_cmds";
+    const scope = "openid email offline_access user_data vehicle_device_data vehicle_cmds vehicle_charging_cmds";
 
     const body = {
         grant_type: "authorization_code",
@@ -36,7 +36,6 @@ export async function GET(req: Request) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
     });
-    
 
     const data = await response.json();
     console.log("tesla token exchange response: ", data);
@@ -52,6 +51,6 @@ export async function GET(req: Request) {
         path: "/",
         maxAge: 60 * 60,
     });
-
+    
     return res;
 }

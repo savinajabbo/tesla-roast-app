@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type TeslaVehicle = {
     id: number;
@@ -13,6 +14,12 @@ type TeslaVehicle = {
 export default function Dashboard() {
     // tesla car info
     const [ vehicles, setVehicles ] = useState<TeslaVehicle[]>([]);
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        await fetch("/api/auth/logout", { method: "POST"});
+        router.push("/");
+    }
 
     useEffect(() => {
         fetch("/api/vehicles")
@@ -21,11 +28,14 @@ export default function Dashboard() {
                 console.log("tesla data from server: ", data);
                 setVehicles(data.response || []);
             });
-    }, []);
+    }, [router]);
 
     return (
         <div className="page">
             <h1>tesla dashboard</h1>
+            <button onClick={handleLogout} className="tesla-button">
+                logout
+            </button>
 
             {vehicles.length > 0 ? (
                 vehicles.map((car) => (
