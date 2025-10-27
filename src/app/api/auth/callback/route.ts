@@ -37,7 +37,7 @@ export async function GET(req: Request) {
     if (data.error) {
         return NextResponse.json({ error: data.error, details: data}, { status: 400 });
     }
-
+    
     const res = NextResponse.redirect("https://tesla-roast-app.vercel.app/dashboard");
     res.cookies.set("tesla_access_token", data.access_token, {
         httpOnly: true,
