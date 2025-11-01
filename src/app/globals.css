@@ -1,66 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --tesla-red: #E82127;
+  --tesla-black: #0e0f12;
+  --tesla-white: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html, body {
+  background-color: var(--tesla-black);
+  color: var(--tesla-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--tesla-red);
+  color: #fff;
+}
+
+* { @apply transition-colors duration-200 ease-in-out; }
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold tracking-wide;
+  }
+  .btn-primary {
+    @apply bg-[var(--tesla-red)] text-white hover:bg-red-600 active:scale-[0.98];
+  }
+  .btn-ghost {
+    @apply bg-white/0 text-white border border-white/20 hover:bg-white/10;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  margin: 0;
-  display: grid;
-  place-items: center;
-  margin-top: 25vh;
-  text-align: center;
+@layer components {
+  .card {
+    @apply bg-neutral-900/80 border border-neutral-800 rounded-2xl p-6 shadow-soft;
+  }
 }
 
-.tesla-button {
-  background-color: #E31937;
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 1.5rem;
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
-  transition: background-color 0.3s, box-shadow 0.3s, transform 0.1s;
-}
-
-.tesla-button:hover {
-  background-color: #720d1c;
-  box-shadow: 0 6px 14px fgba(255, 69, 0, 0.4);
-}
-
-.tesla-button:active {
-  transform: scale(0.98);
-}
-
-.page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #000000;
-  color: #ffffff;
-  font-family: Arial, Helvetica, sans-serif;
-  text-align: center;
-}
-
-.page h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.page p {
-  font-size: 1.2rem;
-  margin-top: 0.5rem;
-  opacity: 0.85;
+@layer utilities {
+  .wrap {
+    @apply w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
 }
