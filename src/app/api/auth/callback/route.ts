@@ -1,50 +1,75 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function GET(req: Request) {
-    const { searchParams } = new URL(req.url);
-    const code = searchParams.get("code");
+  const url = new URL(req.url);
+  const code = url.searchParams.get("code");
+  const state = url.searchParams.get("state");
 
-    if (!code) {
-        return NextResponse.json({ error: "missing code from tesla" }, { status: 400 });
-    }
+  if (!code) {
+    return NextResponse.json({ error: "missing code" }, { status: 400 });
+  }
 
-    const tokenURL = "https://auth.tesla.com/oauth2/v3/token";
-    const clientId = "0781fc62-6073-459e-84ca-ab343e1699fa";
-    const clientSecret = process.env.TESLA_CLIENT_SECRET;
-    const redirectUri = "https://tesla-roast-app.vercel.app/api/auth/callback";
-    const audience = "https://fleet-api.prd.na.vn.cloud.tesla.com";
-    const scope = "openid offline_access user_data vehicle_device_data vehicle_cmds vehicle_charging_cmds";
+  if (!state) {
+    // optionally validate CSRF state?
+    console.warn("missing state param");
+  }
 
-    const body = {
-        grant_type: "authorization_code",
-        client_id: clientId,
-        client_secret: clientSecret,
-        code,
-        redirect_uri: redirectUri,
-        audience,
-        scope,
-    };
+  const clientId = process.env.TESLA_CLIENT_ID!;
+  const clientSecret = process.env.TESLA_CLIENT_SECRET!;
+  const redirectUri = process.env.TESLA_REDIRECT_URI!;
+  const audience = "https://fleet-api.prd.na.vn.cloud.tesla.com";
 
-    const response = await fetch(tokenURL, {
+  try {
+    const form = new URLSearchParams({
+      grant_type: "authorization_code",
+      client_id: clientId,
+      client_secret: clientSecret,
+      code: code,
+      redirect_uri: redirectUri,
+      audience: audience,
+    });
+
+    const tokenRes = await fetch(
+      "https://fleet-auth.prd.vn.cloud.tesla.com/oauth2/v3/token",
+      {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-    });
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: form.toString(),
+      }
+    );
 
-    const data = await response.json();
-    console.log("tesla token exchange response: ", data);
+    const tokenData = await tokenRes.json();
 
-    if (data.error) {
-        return NextResponse.json({ error: data.error, details: data}, { status: 400 });
+    if (!tokenRes.ok) {
+      console.error("tesla oauth token error:", tokenData);
+      return NextResponse.json({ error: "token exchange failed", details: tokenData }, { status: 500 });
     }
-    
-    const res = NextResponse.redirect("https://tesla-roast-app.vercel.app/dashboard");
-    res.cookies.set("tesla_access_token", data.access_token, {
-        httpOnly: true,
-        secure: true,
-        path: "/",
-        maxAge: 60 * 60,
-    });
+
+    const accessToken = tokenData.access_token;
+    const refreshToken = tokenData.refresh_token;
+
+    // set cookies securely
+    const res = NextResponse.redirect(new URL("/dashboard", req.url));
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: tokenData.expires_in ?? 3600,
+    };
+    res.cookies.set("tesla_access_token", accessToken, cookieOptions);
+    if (refreshToken) {
+      res.cookies.set("tesla_refresh_token", refreshToken, {
+        ...cookieOptions,
+        maxAge: 60 * 60 * 24 * 30,
+      });
+    }
 
     return res;
+  } catch (error) {
+    console.error("unexpected callback error:", error);
+    return NextResponse.json({ error: "internal error" }, { status: 500 });
+  }
 }

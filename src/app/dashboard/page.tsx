@@ -33,7 +33,7 @@ export default function Dashboard() {
         <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6 py-10">
             <header className="text-center mb-10">
                 <h1 className="text-5xl font-semibold tracking-tight mb-2">
-                    tesla dashboard
+                    Tesla Roast AI Dashboard
                 </h1>
                 <p className="text-gray-400 text-sm uppercase tracking-widest">
                     live vehicle overview
