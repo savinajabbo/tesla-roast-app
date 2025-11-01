@@ -3,45 +3,53 @@
 @tailwind utilities;
 
 :root {
-  --tesla-red: #E82127;
-  --tesla-black: #0e0f12;
-  --tesla-white: #ffffff;
+  --tesla-red: #E31937;
+  --tesla-black: #0a0a0a;
+  --tesla-white: #ededed;
 }
 
-html, body {
-  background-color: var(--tesla-black);
-  color: var(--tesla-white);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+body {
+  @apply bg-[var(--tesla-black)] text-[var(--tesla-white)] font-tesla;
+  margin: 0;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-::selection {
-  background-color: var(--tesla-red);
-  color: #fff;
+@layer base {
+  * {
+    @apply transition-colors duration-200 ease-in-out;
+  }
 }
 
-* { @apply transition-colors duration-200 ease-in-out; }
+@layer components {
+  .tesla-button {
+    @apply bg-[var(--tesla-red)] text-white px-8 py-4 rounded-full text-lg font-semibold cursor-pointer shadow-lg hover:bg-red-700 active:scale-95;
+  }
+}
+
+@layer components {
+  .page {
+    @apply min-h-screen flex flex-col justify-center items-center bg-black text-white text-center;
+  }
+  .page h1 {
+    @apply text-4xl font-semibold mb-4;
+  }
+  .page p {
+    @apply text-lg opacity-80 mt-2;
+  }
+}
 
 @layer components {
   .btn {
     @apply inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold tracking-wide;
   }
   .btn-primary {
-    @apply bg-[var(--tesla-red)] text-white hover:bg-red-600 active:scale-[0.98];
+    @apply bg-[var(--tesla-red)] text-white hover:bg-red-700 active:scale-[0.98] shadow-lg shadow-red-900/30;
   }
   .btn-ghost {
-    @apply bg-white/0 text-white border border-white/20 hover:bg-white/10;
+    @apply border border-white/20 hover:bg-white/10;
   }
 }
 
-@layer components {
-  .card {
-    @apply bg-neutral-900/80 border border-neutral-800 rounded-2xl p-6 shadow-soft;
-  }
-}
-
-@layer utilities {
-  .wrap {
-    @apply w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-}
