@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
 
@@ -18,26 +19,24 @@ export default function Home() {
   }
 
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <div className="flex justify-center">
-          <Image
-            className="dark:invert"
-            src="/dog.png"
-            alt="logo"
-            width={0}
-            height={0}
-            sizes="100vw"
-            style={{ width: "256px", height: "256px" }}
-          />
-        </div>
+    <div className="min-h-screen flex flex-col items-center justify-center gap-12 p-8 sm:p-20 font-sans bg-[#0e0f12] text-white">
+      <Image
+        src="/dog.png"
+        alt="logo"
+        width={256}
+        height={256}
+        className="dark:invert"
+      />
 
-        <div style={{ display: "flex", height:"10vh", alignItems: "center", justifyContent: "center" }}>
-          <button onClick={handleTeslaLogin} className="tesla-button">
-            login with tesla
-          </button>
-        </div>
-      </main>
+      <div className="flex flex-col items-center gap-4">
+        <button onClick={handleTeslaLogin} className="px-6 py-3 rounded-full bg-red-600 hover:bg-red-700 transition font-semibold text-white shadow-md">
+          login with tesla
+        </button>
+
+        <Link href="/sample-data" className="px-6 py-3 rounded-full bg-gray-800 hover:bg-gray-700 tranistion font-semibold text-white shadow-md">
+          generate sample data
+        </Link>
+      </div>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
       </footer>
     </div>
