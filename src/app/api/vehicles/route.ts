@@ -15,16 +15,14 @@ export async function GET() {
     const listRes = await fetch(
       "https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles",
       {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
       }
     );
 
     if (!listRes.ok) {
       const errorBody = await listRes.text();
-      console.error("tesla fleet API /vehicles failed:", errorBody);
+      console.error("Tesla Fleet API /vehicles failed:", errorBody);
       return NextResponse.json(
         { error: "failed to fetch vehicle list", details: errorBody },
         { status: listRes.status }
@@ -32,26 +30,46 @@ export async function GET() {
     }
 
     const listData = await listRes.json();
-    const vehicles = listData.response;
+    const vehicles = listData.response || [];
 
-    // get vehicle data from each vehicle
+    // for each vehicle, wake it and then get its detailed data
     const detailedData = await Promise.all(
       vehicles.map(async (v: any) => {
         try {
+          // wake up the vehicle first
+          console.log(`waking up ${v.display_name || v.id}...`);
+          await fetch(
+            `https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles/${v.id}/wake_up`,
+            {
+              method: "POST",
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+
+          // wait a few seconds before requesting data
+          await new Promise((r) => setTimeout(r, 3000));
+
+          // fetch the full vehicle_data
           const res = await fetch(
             `https://fleet-api.prd.na.vn.cloud.tesla.com/api/1/vehicles/${v.id}/vehicle_data`,
             {
-              headers: { Authorization: `bearer ${token}` },
+              headers: { Authorization: `Bearer ${token}` },
               cache: "no-store",
             }
           );
 
           if (!res.ok) {
-            console.warn(`could not fetch vehicle_data for ${v.display_name}`);
+            const txt = await res.text();
+            console.warn(`could not fetch vehicle_data for ${v.display_name}:`, txt);
             return { ...v, error: "no detailed data" };
           }
 
           const fullData = await res.json();
+          console.log(
+            `full vehicle_data for ${v.display_name}:`,
+            JSON.stringify(fullData.response?.charge_state, null, 2)
+          );
+
           return fullData.response;
         } catch (error) {
           console.error(`error fetching data for ${v.display_name}:`, error);
@@ -60,13 +78,14 @@ export async function GET() {
       })
     );
 
-    // return the simplified payload of data
+    // return simplified data
     return NextResponse.json({
       response: detailedData.map((v: any) => ({
         id: v.id,
         display_name: v.display_name,
         charge_state: {
           battery_level: v.charge_state?.battery_level ?? null,
+          charging_state: v.charge_state?.charging_state ?? "unknown",
         },
         drive_state: {
           latitude: v.drive_state?.latitude,
